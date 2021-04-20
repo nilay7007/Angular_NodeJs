@@ -93,10 +93,16 @@ router.get("", (req, res, next) => {
     //if on cuurentpage 3 with pagesize 10 then skippped 20 items
     //limit to fetch these number of documnets from collections
   }
-  postQuery.then(documents => {
+  postQuery
+  .then(documents => {
+    fetchedPosts = documents;
+    return Post.count();
+  })
+  .then(count => {
     res.status(200).json({
       message: "Posts fetched successfully!",
-      posts: documents
+      posts: fetchedPosts,
+      maxPosts: count
     });
   });
 });

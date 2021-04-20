@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose= require('mongoose');
@@ -15,7 +16,8 @@ mongoose.connect("mongodb+srv://nilay7007:QH8yWoGulXLDWK5c@cluster0.ctrbe.mongod
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use("/images", express.static(path.join("backend/images")));
+//to give access to images folder to request with /images
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(

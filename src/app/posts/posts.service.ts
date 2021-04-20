@@ -37,14 +37,24 @@ export class PostsService {
   getPostUpdateListener() {
     return this.postsUpdated.asObservable();
   }
-
-  addPost(title: string, content: string) {
+//previously it used to send json to server now it will be Formdata to include a file
+//formdata allows to enter text as well as blobs(images etc.)
+  addPost(title: string, content: string, image: File) {
+    const postData = new FormData();
+    postData.append("title", title);
+    postData.append("content", content);
+    postData.append("image", image, title);
+    //image is the property we r trying ot acces in backend
+    //"image", image, title ->3rd argument is the filename in backend
     const post: Post = { id: null, title: title, content: content };
     this.http
-      .post<{ message: string, postId: string }>("http://localhost:3000/api/posts", post)
+      .post<{ message: string, postId: string }>("http://localhost:3000/api/posts", postData)
       .subscribe(responseData => {
-        const id = responseData.postId;
-        post.id = id;
+        const post:Post={
+       id :responseData.postId,
+        title:title,
+        content:content
+      };
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
         this.router.navigate(["/"]);

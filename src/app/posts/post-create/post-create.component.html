@@ -13,7 +13,12 @@
     </mat-form-field>
     <div>
       <button mat-stroked-button type="button" (click)="filepicker.click()">Pick image</button>
-      <input type="file" #filepicker>
+      <input type="file" #filepicker (change)="onImagePicked($event)">
+      <!--(change)="onImagePicked($event)" whenevr file is chngedFrom no file to some file or somefile to nother file
+      that event will be triggered(chnage) which will execute onImagepicked()-->
+    </div>
+    <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
+      <img [src]="imagePreview" [alt]="form.value.title">
     </div>
     <mat-form-field>
       <textarea

@@ -80,7 +80,20 @@ router.put("/:id",
 });
 
 router.get("", (req, res, next) => {
-  Post.find().then(documents => {
+  //for pagination w e can fetch those detailsa as query parameter
+  //if we re extrcating querie s or another from url then it will be a string
+  //so connvert it to int by +
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+  const postQuery = Post.find();//it will be executed when .then is there(one functionality provided by mongoose to split 
+  //queries)
+  let fetchedPosts;
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+    //if on cuurentpage 3 with pagesize 10 then skippped 20 items
+    //limit to fetch these number of documnets from collections
+  }
+  postQuery.then(documents => {
     res.status(200).json({
       message: "Posts fetched successfully!",
       posts: documents

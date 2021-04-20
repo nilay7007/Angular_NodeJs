@@ -8,6 +8,9 @@ export const mimeType = (
 ): Promise<{ [key: string]: any }> | Observable<{ [key: string]: any }> => {
   if (typeof(control.value) === 'string') {
     return of(null);
+    //of is an easy way to create an observable
+    //if observable is null->no error
+    //if error then msg is passed
   }
   const file = control.value as File;
   //extracting a file and telling js that its a fileS

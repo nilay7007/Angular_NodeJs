@@ -12,43 +12,43 @@ export class PostsService {
   private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
 
   constructor(private http: HttpClient,
-    private router: Router) {}
+    private router: Router) { }
 
-    getPosts(postsPerPage: number, currentPage: number) {
-      const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
-      this.http
-        .get<{ message: string; posts: any; maxPosts: number }>(
-          "http://localhost:3000/api/posts" + queryParams
-        )
-        .pipe(
-          map(postData => {
-            return {
-              posts: postData.posts.map(post => {
-                return {
-                  title: post.title,
-                  content: post.content,
-                  id: post._id,
-                  imagePath: post.imagePath
-                };
-              }),
-              maxPosts: postData.maxPosts
-            };
-          })
-        )
-        .subscribe(transformedPostData => {
-          this.posts = transformedPostData.posts;
-          this.postsUpdated.next({
-            posts: [...this.posts],
-            postCount: transformedPostData.maxPosts
-          });
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
+    this.http
+      .get<{ message: string; posts: any; maxPosts: number }>(
+        "http://localhost:3000/api/posts" + queryParams
+      )
+      .pipe(
+        map(postData => {
+          return {
+            posts: postData.posts.map(post => {
+              return {
+                title: post.title,
+                content: post.content,
+                id: post._id,
+                imagePath: post.imagePath
+              };
+            }),
+            maxPosts: postData.maxPosts
+          };
+        })
+      )
+      .subscribe(transformedPostData => {
+        this.posts = transformedPostData.posts;
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: transformedPostData.maxPosts
         });
-    }
+      });
+  }
 
   getPostUpdateListener() {
     return this.postsUpdated.asObservable();
   }
-//previously it used to send json to server now it will be Formdata to include a file
-//formdata allows to enter text as well as blobs(images etc.)
+  //previously it used to send json to server now it will be Formdata to include a file
+  //formdata allows to enter text as well as blobs(images etc.)
   addPost(title: string, content: string, image: File) {
     const postData = new FormData();
     postData.append("title", title);
@@ -56,7 +56,7 @@ export class PostsService {
     postData.append("image", image, title);
     //image is the property we r trying ot acces in backend
     //"image", image, title ->3rd argument is the filename in backend
-    
+
     this.http
       .post<{ message: string, post: Post }>("http://localhost:3000/api/posts", postData)
       .subscribe(responseData => {
@@ -66,7 +66,7 @@ export class PostsService {
 
   deletePost(postId: string) {
     return this.http
-    .delete("http://localhost:3000/api/posts/" + postId);
+      .delete("http://localhost:3000/api/posts/" + postId);
   }
 
   getPost(id: string) {
@@ -77,23 +77,23 @@ export class PostsService {
   }
 
   updatePost(id: string, title: string, content: string, image: File | string) {
-   //const post: Post = { id: id, title: title, content: content,imagePath:null };
-   let postData: Post | FormData;
-   //File will be a object .String will be not
-   if (typeof image === "object") {
-    postData = new FormData();
-    postData.append("id", id);
-    postData.append("title", title);
-    postData.append("content", content);
-    postData.append("image", image, title);
-  } else {
-    postData = {
-      id: id,
-      title: title,
-      content: content,
-      imagePath: image
-    };
-  }
+    //const post: Post = { id: id, title: title, content: content,imagePath:null };
+    let postData: Post | FormData;
+    //File will be a object .String will be not
+    if (typeof image === "object") {
+      postData = new FormData();
+      postData.append("id", id);
+      postData.append("title", title);
+      postData.append("content", content);
+      postData.append("image", image, title);
+    } else {
+      postData = {
+        id: id,
+        title: title,
+        content: content,
+        imagePath: image
+      };
+    }
     this.http
       .put("http://localhost:3000/api/posts/" + id, postData)
       .subscribe(response => {

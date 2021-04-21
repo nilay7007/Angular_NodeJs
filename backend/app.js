@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose= require('mongoose');
 //postModel will be a bridge betwen nodejs and mongoosedb without us writing any mongocode
 const postsRoutes = require("./routes/posts");
+const userRoutes = require("./routes/user");
 const app = express();
 
 mongoose.connect("mongodb+srv://nilay7007:QH8yWoGulXLDWK5c@cluster0.ctrbe.mongodb.net/angular_node?retryWrites=true&w=majority")
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -87,5 +88,7 @@ app.use((req, res, next) => {
 //   });
 // });
 app.use("/api/posts", postsRoutes);
+app.use("/api/user", userRoutes);
+
 
 module.exports = app;

@@ -62,7 +62,8 @@ In some circumstances, you may want to use res.send and then do other stuff.
       );
       res.status(200).json({
         token: token,
-        expiresIn: 3600
+        expiresIn: 3600,
+        userId: fetchedUser._id
       });
     })
     .catch(err => {

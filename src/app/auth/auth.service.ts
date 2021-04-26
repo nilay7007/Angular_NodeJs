@@ -51,7 +51,8 @@ _id: "607fcc530851092e20a2716a"
     const authData: AuthData = { email: email, password: password };
     this.http
       .post<{
-        token: string; expiresIn: number, userId: string}>(
+        token: string; expiresIn: number, userId: string
+      }>(
         "http://localhost:3000/api/user/login",
         authData
       )
@@ -62,19 +63,34 @@ _id: "607fcc530851092e20a2716a"
          */
         const token = response.token;
         this.token = token;
-              if (token) {
-                const expiresInDuration = response.expiresIn;
-                this.setAuthTimer(expiresInDuration);
-                this.isAuthenticated = true;
-                this.userId = response.userId;
-                 this.authStatusListener.next(true);
-                const now = new Date();
-                const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-                console.log(expirationDate);
-                this.saveAuthData(token, expirationDate, this.userId);
-                this.router.navigate(["/"]);
-              }
+        if (token) {
+          const expiresInDuration = response.expiresIn;
+          this.setAuthTimer(expiresInDuration);
+          this.isAuthenticated = true;
+          this.userId = response.userId;
+          this.authStatusListener.next(true);
+          const now = new Date();
+          const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+          console.log('Will expire after dateTime ' + expirationDate);
+          this.saveAuthData(token, expirationDate, this.userId);
+          this.router.navigate(["/"]);
+        }
       });
+  }
+  private setAuthTimer(duration: number) {
+    //setTimeout works in milisecnds so *1000
+    console.log("Setting timer: " + duration);
+    this.tokenTimer = setTimeout(() => {
+      this.logout();
+    }, duration * 1000);
+  }
+
+
+  private saveAuthData(token: string, expirationDate: Date, userId: string) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("expiration", expirationDate.toISOString());
+    //serialized version of string
+    localStorage.setItem("userId", userId);
   }
 
   autoAuthUser() {
@@ -93,37 +109,6 @@ _id: "607fcc530851092e20a2716a"
     }
   }
 
-  logout() {
-    this.token = null;
-    this.isAuthenticated = false;
-    this.authStatusListener.next(false);
-    this.userId = null;
-    clearTimeout(this.tokenTimer);
-    this.clearAuthData();
-    this.router.navigate(["/"]);
-  }
-
-  private setAuthTimer(duration: number) {
-    //setTimeout works in milisecnds so *1000
-    console.log("Setting timer: " + duration);
-    this.tokenTimer = setTimeout(() => {
-      this.logout();
-    }, duration *1000);
-  }
-
-  private saveAuthData(token: string, expirationDate: Date, userId: string) {
-    localStorage.setItem("token", token);
-    localStorage.setItem("expiration", expirationDate.toISOString());
-    //serialized version of string
-    localStorage.setItem("userId", userId);
-  }
-
-  private clearAuthData() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("expiration");
-    localStorage.removeItem("userId");
-  }
-
   private getAuthData() {
     const token = localStorage.getItem("token");
     const expirationDate = localStorage.getItem("expiration");
@@ -137,4 +122,24 @@ _id: "607fcc530851092e20a2716a"
       userId: userId
     }
   }
+
+  logout() {
+    this.token = null;
+    this.isAuthenticated = false;
+    this.authStatusListener.next(false);
+    this.userId = null;
+    clearTimeout(this.tokenTimer);
+    this.clearAuthData();
+    this.router.navigate(["/"]);
+  }
+
+
+
+
+  private clearAuthData() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiration");
+    localStorage.removeItem("userId");
+  }
+
 }

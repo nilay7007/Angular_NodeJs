@@ -10,6 +10,6 @@ module.exports = (req, res, next) => {
     //adding new data to req...now it will get attached to it
     next();
   } catch (error) {
-    res.status(401).json({ message: "Auth failed!" });
+    res.status(401).json({ message: "You are not authenticated!" });
   }
 };

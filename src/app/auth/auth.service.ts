@@ -35,7 +35,7 @@ export class AuthService {
     this.http
       .post("http://localhost:3000/api/user/signup", authData)
       .subscribe(response => {
-        console.log(response);
+        this.router.navigate(["/"]);
         /**
          * message: "User created!"
 result:
@@ -44,6 +44,8 @@ password: "$2b$10$n9eUegnZmA9xyLiFasrvB.px/PfM28qZhWFwamAzszSUtFXO/HxYa"
 __v: 0
 _id: "607fcc530851092e20a2716a"
          */
+      },error => {
+        this.authStatusListener.next(false);
       });
   }
 
@@ -75,6 +77,9 @@ _id: "607fcc530851092e20a2716a"
           this.saveAuthData(token, expirationDate, this.userId);
           this.router.navigate(["/"]);
         }
+      }
+      , error => {
+        this.authStatusListener.next(false);
       });
   }
   private setAuthTimer(duration: number) {

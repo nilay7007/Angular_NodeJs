@@ -7,7 +7,9 @@ const postsRoutes = require("./routes/posts");
 const userRoutes = require("./routes/user");
 const app = express();
 
-mongoose.connect("mongodb+srv://nilay7007:QH8yWoGulXLDWK5c@cluster0.ctrbe.mongodb.net/angular_node?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://nilay7007:" +
+process.env.MONGO_ATLAS_PW +
+"@cluster0.ctrbe.mongodb.net/angular_node?retryWrites=true&w=majority")
 .then(() => {
   console.log("Connected to database!");
 })
@@ -18,7 +20,9 @@ mongoose.connect("mongodb+srv://nilay7007:QH8yWoGulXLDWK5c@cluster0.ctrbe.mongod
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/images", express.static(path.join("backend/images")));
+//any request with /image is allowed to continue and fetch their file from there
 //to give access to images folder to request with /images
+//path.join path to construct path to my backend imagesfolder so that request with /images go to backend/images folder
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(

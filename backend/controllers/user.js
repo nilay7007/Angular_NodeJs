@@ -54,7 +54,7 @@ In some circumstances, you may want to use res.send and then do other stuff.
       //jwt.sign has 3 argumennts->1st payload .2nd to verify in server side ...3rd its there
       const token = jwt.sign(
         { email: fetchedUser.email, userId: fetchedUser._id },
-        "secret_this_should_be_longer",
+        process.env.JWT_KEY,
         { expiresIn: "1h" }
       );
       res.status(200).json({

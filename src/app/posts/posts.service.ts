@@ -2,9 +2,11 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Subject } from "rxjs";
 import { map } from 'rxjs/operators';
-
 import { Post } from "./post.model";
 import { Router } from "@angular/router";
+import { environment } from "../../environments/environment";
+
+const BACKEND_URL = environment.apiUrl + "/posts/";
 
 @Injectable({ providedIn: "root" })
 export class PostsService {
@@ -18,7 +20,7 @@ export class PostsService {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
     this.http
       .get<{ message: string; posts: any; maxPosts: number }>(
-        "http://localhost:3000/api/posts" + queryParams
+        BACKEND_URL + queryParams
       )
       .pipe(
         map(postData => {
@@ -59,7 +61,7 @@ export class PostsService {
     //"image", image, title ->3rd argument is the filename in backend
 
     this.http
-      .post<{ message: string, post: Post }>("http://localhost:3000/api/posts", postData)
+      .post<{ message: string, post: Post }>(BACKEND_URL, postData)
       .subscribe(responseData => {
         this.router.navigate(["/"]);
       });
@@ -67,41 +69,49 @@ export class PostsService {
 
   deletePost(postId: string) {
     return this.http
-      .delete("http://localhost:3000/api/posts/" + postId);
+      .delete(BACKEND_URL + postId);
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string;
-      title: string; 
-      content: string, 
-      imagePath: string ,
-      creator:string}>(
-      "http://localhost:3000/api/posts/" + id
+    return this.http.get<{
+      _id: string;
+      title: string;
+      content: string,
+      imagePath: string,
+      creator: string
+    }>(
+      BACKEND_URL + id
     );
     //return {...this.posts.find(p=>p.id==id)};
   }
 
   updatePost(id: string, title: string, content: string, image: File | string) {
+    //if we get a string image we need to  send json request but if we have a file then we have to upload as formdata
     //const post: Post = { id: id, title: title, content: content,imagePath:null };
     let postData: Post | FormData;
     //File will be a object .String will be not
     if (typeof image === "object") {
       postData = new FormData();
+      /*
+      The append() method of the FormData interface appends a new value onto an existing key inside a FormData object,
+       or adds the key if it does not already exist. */
       postData.append("id", id);
       postData.append("title", title);
       postData.append("content", content);
       postData.append("image", image, title);
-    } else {
+      //passing title as name we want to store in backend
+    }//else if image is a string 
+    else {
       postData = {
         id: id,
         title: title,
         content: content,
         imagePath: image,
-        creator :null
+        creator: null
       };
     }
     this.http
-      .put("http://localhost:3000/api/posts/" + id, postData)
+      .put(BACKEND_URL + id, postData)
       .subscribe(response => {
         this.router.navigate(["/"]);
       });

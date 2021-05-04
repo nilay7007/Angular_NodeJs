@@ -7,6 +7,7 @@ exports.createPost = (req, res, next) => {
     content: req.body.content,
     imagePath: url + "/images/" + req.file.filename,
     creator: req.userData.userId
+    //userData generated in check-auth
   });
   post.save().then(createdPost => {
     res.status(201).json({
@@ -23,12 +24,14 @@ exports.createPost = (req, res, next) => {
       });
     });
 };
-
+//if we get a string image we need to  send json request but if we have a file then we have to upload as formdata
 exports.updatePost = (req, res, next) => {
   let imagePath = req.body.imagePath;
+  //req.file is undefined if its a string.i.e.if we didnt selected any other image during edit
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
     imagePath = url + "/images/" + req.file.filename;
+    //req.file is provided by multer which will have filename preperty
   }
   const post = new Post({
     _id: req.body.id,

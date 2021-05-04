@@ -1,5 +1,5 @@
 const multer = require("multer");
-
+//multer is external package used to extract incoming files
 const MIME_TYPE_MAP = {
     "image/png": "png",
     "image/jpeg": "jpg",

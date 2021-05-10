@@ -6,7 +6,7 @@ import { Observable, Observer, of } from "rxjs";
 export const mimeType = (
   control: AbstractControl
 ): Promise<{ [key: string]: any }> | Observable<{ [key: string]: any }> => {
-  if (typeof(control.value) === 'string') {
+  if (typeof (control.value) === 'string') {
     return of(null);
     //of is an easy way to create an observable
     //if observable is null->no error
@@ -15,8 +15,11 @@ export const mimeType = (
   const file = control.value as File;
   //extracting a file and telling js that its a fileS
   const fileReader = new FileReader();
+  //fileReader.onloadend will return a synchronous tihng so we use .create prvided by angular
+  //observer is a tool that is use d to control when this observable emits data
   const frObs = Observable.create(
     (observer: Observer<{ [key: string]: any }>) => {
+      //fileReader.addEventListener("loadend" is same as fileReader.onload ,differnece is onloadend will have few more  information
       fileReader.addEventListener("loadend", () => {
         const arr = new Uint8Array(fileReader.result as ArrayBuffer).subarray(0, 4);
         //Conerting to new  array of 8-bit unsigned integers to infer what file type it is(png,jpg or others)
@@ -50,7 +53,8 @@ export const mimeType = (
         observer.complete();
       });
       fileReader.readAsArrayBuffer(file);
-      //reading file as arraybuffer not as dataurl
+      //reading file as arraybuffer not as dataurl so to capture the mime type
+      //when its done addEventListener will call loloadend function
     }
   );
   return frObs;

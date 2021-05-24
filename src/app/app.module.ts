@@ -34,5 +34,6 @@ import { PostsModule } from "./posts/posts.module";
   ],
   bootstrap: [AppComponent],
   entryComponents: [ErrorComponent]
+  //entryComponents :loading dynamic components
 })
 export class AppModule { }

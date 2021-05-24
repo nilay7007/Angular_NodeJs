@@ -16,7 +16,7 @@ export const mimeType = (
   //extracting a file and telling js that its a fileS
   const fileReader = new FileReader();
   //fileReader.onloadend will return a synchronous tihng so we use .create prvided by angular
-  //observer is a tool that is use d to control when this observable emits data
+  //observer is a tool that is use  to control when this observable emits data
   const frObs = Observable.create(
     (observer: Observer<{ [key: string]: any }>) => {
       //fileReader.addEventListener("loadend" is same as fileReader.onload ,differnece is onloadend will have few more  information

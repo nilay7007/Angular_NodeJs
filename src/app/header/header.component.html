@@ -1,11 +1,11 @@
 <mat-toolbar color="primary">
     <span>
-      <a routerLink="/">MyMessages</a>
+      <a routerLink="/">My Tasks</a>
     </span>
     <span class="spacer"></span>
     <ul>
       <li  *ngIf="userIsAuthenticated">
-        <a mat-button routerLink="/create" routerLinkActive="mat-accent">New Post</a>
+        <a mat-button routerLink="/create" routerLinkActive="mat-accent">New Task</a>
       </li>
       <li *ngIf="!userIsAuthenticated">
       <!-- *ngIf="!userIsAuthenticated"></li>-->
@@ -19,4 +19,7 @@
       </li>
     </ul>
   </mat-toolbar>
-  
+  <!--RouterLinkActive:Tracks whether the linked route of an element is currently active, and allows you to
+     specify one or more CSS classes to add to the element when the linked route is active.-->
+     <!--RouterLink:directive-When applied to an element in a template, makes that element a link 
+      that initiates navigation to a route.-->

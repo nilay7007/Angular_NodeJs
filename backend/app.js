@@ -18,13 +18,19 @@ process.env.MONGO_ATLAS_PW +
 });
 
 app.use(bodyParser.json());
+//middleware for parsing json objects 
 app.use(bodyParser.urlencoded({ extended: false }));
+//middleware for parsing bodies from URL.
 app.use("/images", express.static(path.join("backend/images")));
 //any request with /image is allowed to continue and fetch their file from there
 //to give access to images folder to request with /images
 //path.join path to construct path to my backend imagesfolder so that request with /images go to backend/images folder
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
+  /**
+   * CORS, or Cross Origin Resource Sharing, is a mechanism for browsers
+   *  to let a site running at origin A to request resources from origin B.
+   */
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"

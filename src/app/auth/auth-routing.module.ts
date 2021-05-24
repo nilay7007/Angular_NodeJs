@@ -12,6 +12,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(routes)
+    /**
+     * Angular knows that the route list is only responsible for providing additional routes
+     *  and is intended for feature modules. You can use forChild() in multiple modules.
+     */
   ],
   exports: [RouterModule]
 })

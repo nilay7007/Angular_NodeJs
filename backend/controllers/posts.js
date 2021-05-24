@@ -6,6 +6,7 @@ exports.createPost = (req, res, next) => {
     title: req.body.title,
     content: req.body.content,
     imagePath: url + "/images/" + req.file.filename,
+    //ex:"http://localhost:3000/images/use-1620156190944.png"
     creator: req.userData.userId
     //userData generated in check-auth
   });

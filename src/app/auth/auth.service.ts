@@ -91,6 +91,10 @@ _id: "607fcc530851092e20a2716a"
       this.logout();
     }, duration * 1000);
   }
+  /**
+   * You can think of it as a timerID, 
+   * which uniquely identify a timer, so that you can reset by clearTimeout(timerID)
+   */
 
 
   private saveAuthData(token: string, expirationDate: Date, userId: string) {

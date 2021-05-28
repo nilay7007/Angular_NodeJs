@@ -9,8 +9,8 @@ const routes: Routes = [
   { path: '', component: PostListComponent },
   { path: 'create', component: PostCreateComponent, canActivate: [AuthGuard] },
   { path: 'edit/:postId', component: PostCreateComponent, canActivate: [AuthGuard] },
-  { path: "auth", loadChildren: "./auth/auth.module#AuthModule" },
-  //{ path: "auth", loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) }
+  //{ path: "auth", loadChildren: "./auth/auth.module#AuthModule" },
+  { path: "auth", loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) }
   //in some angular version above syntax may work for lazy loading
 ];
 
